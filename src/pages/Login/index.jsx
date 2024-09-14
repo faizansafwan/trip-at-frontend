@@ -22,7 +22,9 @@ export default function LoginPage() {
                     </div>
 
                     <div className="w-full px-7 my-4 py-3">
-                        <input type="submit" className="w-full text-white text-[25px] font-[500] rounded rounded-md border py-2 bg-primary cursor-pointer focus:opacity-75 hover:opacity-75 hover:shadow-lg transition-all duration-300 ease-in" value={"Log In"} />
+                        <a href="/">
+                            <input type="submit" className="w-full text-white text-[25px] font-[500] rounded rounded-md border py-2 bg-primary cursor-pointer focus:opacity-75 hover:opacity-75 hover:shadow-lg transition-all duration-300 ease-in" value={"Log In"} />
+                        </a>
                     </div>
 
                     <div className="flex justify-between my-4  px-7">
