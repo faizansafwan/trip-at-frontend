@@ -1,25 +1,43 @@
-import { FaHome, FaPlusCircle } from "react-icons/fa";
-import { FaLocationPin } from "react-icons/fa6";
+import { FaCoins, FaHome, FaMapMarkedAlt, FaPhone, FaPlusCircle } from "react-icons/fa";
+import { NavLink } from "react-router-dom"; // Import NavLink for active link handling
+import Home from "../../pages/Home";
+import AddPost from "../../pages/AddPost";
+import Accomadation from "../../pages/Accomadation";
+import Contact from "../../pages/Contact";
+import Budget from "../../pages/Budget";
 
 export default function LeftNav() {
 
-    return (
-        <div className="w-full flex justify-center bg-primary text-[20px] h-screen">
-            <ul>
-                <a href="" className="flex items-center gap-3">
-                    <li className="p-2">Home </li> <FaHome size={25} /> 
-                </a>
-                <a href="" className="flex items-center gap-3">
-                    <li className="p-2">Add Post</li> 
-                    <FaPlusCircle size={25} />
-                </a>
-                <a href="" className="flex items-center gap-3">
-                    <li className="p-2">Accomadation</li>
-                    <FaLocationPin size={25} />
-                </a>
-                <a href="" className="flex items-center gap-3"><li className="p-2">Budget</li></a>
-                <a href="" className="flex items-center gap-3"><li className="p-2">Contact</li></a>
-            </ul>
-        </div>
-    )
+
+  return (
+    <div className="w-full flex justify-center bg-primary text-[20px] h-screen text-white">
+      <nav>
+        <ul> 
+          <ActiveLink href="/">Home <FaHome size={24} /></ActiveLink> 
+          <ActiveLink href="/add-post">Add Post <FaPlusCircle size={24} /> </ActiveLink> 
+          <ActiveLink href="/accomadation">Accommadation <FaMapMarkedAlt size={24} /> </ActiveLink> 
+          <ActiveLink href="/budget">Budget <FaCoins size={24} />  </ActiveLink> 
+          <ActiveLink href="/contact">Contact <FaPhone size={24} />  </ActiveLink> 
+              
+          </ul>
+      </nav>    
+    </div>
+    
+  );
+}
+
+function ActiveLink({href, children, ...props}) {
+  const path = window.location.pathname;
+
+  return (
+    <li
+      className={`w-full border-b p-3 transition-all duration-300 ease-in-out ${
+        path === href ? "text-primary-dark" : "hover:text-gray-300"
+      }`}
+    >
+      <a href={href} {...props} className="flex items-center gap-2">
+        {children}
+      </a>
+    </li>
+  )
 }
