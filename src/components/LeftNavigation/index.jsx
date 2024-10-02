@@ -1,16 +1,10 @@
 import { FaCoins, FaHome, FaMapMarkedAlt, FaPhone, FaPlusCircle } from "react-icons/fa";
-import { NavLink } from "react-router-dom"; // Import NavLink for active link handling
-import Home from "../../pages/Home";
-import AddPost from "../../pages/AddPost";
-import Accomadation from "../../pages/Accomadation";
-import Contact from "../../pages/Contact";
-import Budget from "../../pages/Budget";
 
 export default function LeftNav() {
 
 
   return (
-    <div className="w-full flex justify-center bg-primary text-[20px] h-screen text-white">
+    <div className="w-[50%] lg:w-[19%] md:w-[25%] sm:w-[35%] z-[80] fixed top-50 left-0 flex justify-center bg-primary text-[20px] h-screen text-white">
       <nav>
         <ul> 
           <ActiveLink href="/">Home <FaHome size={24} /></ActiveLink> 

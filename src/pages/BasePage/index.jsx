@@ -1,3 +1,4 @@
+import { FaBars } from "react-icons/fa";
 import Header from "../../components/Header";
 import LeftNav from "../../components/LeftNavigation";
 import Accomadation from "../Accomadation";
@@ -5,8 +6,18 @@ import AddPost from "../AddPost";
 import Budget from "../Budget";
 import Contact from "../Contact";
 import Home from "../Home";
+import { useState } from "react";
 
 export default function BasePage() {
+
+  const [hideNav, setHideNav] = useState(false);
+
+
+  const hideAndShow = () => {
+    setHideNav(!hideNav);
+  }  
+
+  
 
     let currentPage;
     switch(window.location.pathname) {
@@ -29,17 +40,26 @@ export default function BasePage() {
     }
 
     return(
-        <div> 
-            <div>
-                <Header />
+        <div className="w-full"> 
+            <div className="relative">
+              <div className="z-[100]">
+                 <Header />
+              </div>
+             
+
+              <div className="fixed top-0 left-4 flex h-[50px] items-center z-[200] lg:hidden">
+                  <FaBars size={24} onClick={hideAndShow}  />
+              </div>
             </div>
 
-            <div className="flex gap-2">
-                <div className="w-[17%]">
+            
+
+            <div className="flex gap-2 w-full">
+                <div className={`mt-[50px]  ${hideNav ? 'block' : 'hidden'} lg:block`}>
                     <LeftNav />
                 </div>
 
-                <div>
+                <div className="w-full lg:ml-[17%] z-[50]">
                     {currentPage}
                 </div>
             </div>
