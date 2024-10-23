@@ -30,8 +30,8 @@ export default function Contact() {
                     </div>
 
                     <div className="flex justify-end my-5 relative">
-                        <FaPaperPlane size={15} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white" />
-                        <input type="submit" placeholder="Write your message here..." className="p-2 pr-9 text-white text-[18px] rounded rounded-2 bg-primary-dark 
+                        <FaPaperPlane size={15} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white z-50" />
+                        <input type="submit" className="p-2 pr-9 text-white text-[18px] rounded rounded-2 bg-primary-dark 
                         cursor-pointer hover:opacity-75 transition-opacity duration-500 ease-in-out focus:opacity-75" value={"Send"} />
                     </div>
 

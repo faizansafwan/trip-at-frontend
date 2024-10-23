@@ -7,6 +7,7 @@ import Budget from "../Budget";
 import Contact from "../Contact";
 import Home from "../Home";
 import { useState } from "react";
+import BudgetForm from "../BudgetForm";
 
 export default function BasePage() {
 
@@ -36,6 +37,9 @@ export default function BasePage() {
       case "/budget":
         currentPage = <Budget />
         break;
+      case "/budget/budget-form":
+        currentPage = <BudgetForm />
+        break;
   
     }
 
@@ -54,7 +58,7 @@ export default function BasePage() {
 
             
 
-            <div className="flex gap-2 w-full">
+            <div className="flex gap-5 w-full">
                 <div className={`mt-[50px]  ${hideNav ? 'block' : 'hidden'} lg:block`}>
                     <LeftNav />
                 </div>

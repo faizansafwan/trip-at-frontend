@@ -40,43 +40,57 @@ export default function AddPost() {
             {/* Visited Place Input */}
             <div className="w-full flex items-center">
               <label htmlFor="" className="w-1/3 font-semibold">Visited Place</label>
-              <input type="text" placeholder="e.g., Colombo Lotus Tower" className="w-2/3 p-2 border border-primary rounded" />
+              <input type="text" placeholder="e.g., Colombo Lotus Tower" className="w-2/3 p-2 border border-primary rounded focus:outline-primary" />
             </div>
 
             {/* Date Visited Input */}
             <div className="w-full flex items-center">
               <label htmlFor="" className="w-1/3 font-semibold">Date Visited</label>
-              <input type="date" placeholder="Select a date" className="w-2/3 p-2 border border-primary rounded" />
+              <input type="date" placeholder="Select a date" className="w-2/3 p-2 border border-primary rounded focus:outline-primary" />
             </div>
 
             {/* Rate Place */}
             <div className="w-full flex items-center">
               <label htmlFor="" className="w-1/3 font-semibold">Rate Place</label>
-              <Rating count={5} size={30} color1="gray" color2={'#316EFF'} half={false} className="w-[200px] z-[50]" />
+              <Rating count={5} size={30} color1="gray" color2={'#316EFF'} half={false} className="w-[200px] z-[50] focus:outline-primary" />
             </div>
 
             {/* Positive Description */}
             <div className="w-full flex">
               <label htmlFor="" className="w-1/3 font-semibold mt-2">Positive Description</label>
-              <textarea placeholder="Write about the positive aspects of the place..." className="w-2/3 p-2 border border-primary rounded" />
+              <textarea placeholder="Write about the positive aspects of the place..." className="w-2/3 p-2 border border-primary rounded focus:outline-primary" />
             </div>
 
             {/* Negative Description */}
             <div className="w-full flex">
               <label htmlFor="" className="w-1/3 font-semibold mt-2">Negative</label>
-              <textarea placeholder="Write about the negative aspects of the place..." className="w-2/3 p-2 border border-primary rounded"></textarea>
+              <textarea placeholder="Write about the negative aspects of the place..." className="w-2/3 p-2 border border-primary rounded focus:outline-primary"></textarea>
             </div>
 
             {/* Add Images */}
-            <div className="w-full flex">
+            <div className="w-full flex items-center">
               <label htmlFor="" className="w-1/3 font-semibold">Add Images</label>
-              <input type="file" multiple className="w-2/3 p-2 border border-primary rounded" />
+              <div className="w-2/3 flex items-center gap-4">
+                {/* Hidden file input */}
+                <input
+                  type="file"
+                  multiple
+                  id={`file-input-${index}`} // Unique ID for each form's file input
+                  style={{ display: 'none' }} // Hide the default input
+                 
+                />
+                {/* Custom button to trigger file input */}
+                <label htmlFor={`file-input-${index}`} className="cursor-pointer flex items-center">
+                  <FaPlus size={55} className="text-primary-dark border border-dashed border-primary-dark p-2 rounded hover:opacity-75 focus:outline-primary" />
+                </label>
+                
+              </div>
             </div>
 
             {/* Additional Information */}
             <div className="w-full flex">
               <label htmlFor="" className="w-1/3 font-semibold mt-2">Additional Information</label>
-              <textarea placeholder="Add any additional information about your experience..." className="w-2/3 p-2 border border-primary rounded" />
+              <textarea placeholder="Add any additional information about your experience..." className="w-2/3 p-2 border border-primary rounded focus:outline-primary" />
             </div>
 
             {/* Remove Form Button */}
@@ -87,7 +101,11 @@ export default function AddPost() {
                 onClick={() => removeForm(form.id)}
               />
             </div>
+
+
           </div>
+
+          
         </form>
       ))}
 
@@ -99,6 +117,11 @@ export default function AddPost() {
           <p className="text-primary-dark text-[18px] inline-block">Add More Location</p>
         </button>
       </div>
+
+      <div className="flex justify-end">
+        <button className="p-3 bg-primary-dark text-white font-[500] rounded rounded-2 hover:opacity-75 transition ease-in-out duration-300">Upload Trip</button>
+      </div>
+      
     </div>
   );
 }
