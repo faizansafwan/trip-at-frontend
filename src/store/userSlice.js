@@ -4,12 +4,15 @@ import axios from "axios";
 
 export const createUser = createAsyncThunk(
     'user/createUser',
-    async (userdata, { rejectWithValue }) => {
+    async (userdata, thunkAPI) => {
         try {
-            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/user`, userdata);
+            const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
+            const response = await axios.post(`${backendUrl}/api/user`, userdata);
             return response.data;
         } catch (error) {
-            return rejectWithValue(error.response.data || 'Something went wrong');
+            console.log("Error response:", error.response); 
+            const errorMsg = error.response?.data || 'Something went wrong';
+            return thunkAPI.rejectWithValue(errorMsg);
         }
     }
 );
@@ -27,14 +30,17 @@ const userSlice = createSlice({
             .addCase(createUser.pending, (state) => {
                 state.status = 'loading';
                 state.error = null;
+                console.log("loading", process.env.REACT_APP_BACKEND_URL);
             })
             .addCase(createUser.fulfilled, (state, action) => {
                 state.status = 'succeeded';
                 state.user = action.payload;
+                console.log("successful");
             })
             .addCase(createUser.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.payload;
+                // console.log();
             });
     },
 });
