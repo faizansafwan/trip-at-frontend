@@ -31,7 +31,18 @@ export default function SignupPage() {
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log("Form data:", formData); // Debug
-        dispatch(createUser(formData));
+        console.log("Form is being submitted");
+        dispatch(createUser({
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            email: formData.email,
+            password: formData.password,
+            
+        })).then((response) => {
+            console.log("Response from createUser:", response);
+        }).catch((error) => {
+            console.error("Error in createUser:", error);
+        });
     };
 
     const togglePasswordVisibility = () => {
