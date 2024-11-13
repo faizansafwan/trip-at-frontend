@@ -10,6 +10,7 @@ import Contact from './pages/Contact';
 import LeftNav from './components/LeftNavigation';
 import NavLinks from './routes';
 import BasePage from './pages/BasePage';
+import UserProfile from './pages/UserProfile';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Routes>
             <Route path='/login' element={ <LoginPage /> } />
             <Route path='/signup' element={ <SignupPage /> } />
+            <Route path='/profile' element={ <UserProfile /> } />            
 
             <Route path='/*' element={<BasePage /> } />
           
