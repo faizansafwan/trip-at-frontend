@@ -1,5 +1,5 @@
 // src/components/SignupPage.js
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FiEye, FiEyeOff, FiUserPlus } from 'react-icons/fi';
 import { FaUnlockAlt } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,6 +12,8 @@ export default function SignupPage() {
     const status = useSelector((state) => state.user.status);
     const error = useSelector((state) => state.user.error);
 
+    const [errorMessage, setErrorMessage] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
         firstName: '',
@@ -30,20 +32,48 @@ export default function SignupPage() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log("Form data:", formData); // Debug
-        console.log("Form is being submitted");
-        dispatch(createUser({
-            firstName: formData.firstName,
-            lastName: formData.lastName,
-            email: formData.email,
-            password: formData.password,
-            
-        })).then((response) => {
-            console.log("Response from createUser:", response);
-        }).catch((error) => {
-            console.error("Error in createUser:", error);
-        });
+        
+        const regex = /(?=.*[0-9])(?=.*[!@#$%^&*(),.?":{}|<>])/;
+      
+
+        if (regex.test(formData.password) && formData.password.length >= 10) {
+            dispatch(createUser({
+                firstName: formData.firstName,
+                lastName: formData.lastName,
+                email: formData.email,
+                password: formData.password,
+            }))
+            .then((response) => {
+                console.log("Response from createUser:", response);
+                setSuccessMessage("User created successfully!");
+            }).catch((error) => {
+                console.error("Error in createUser:", error);
+                setErrorMessage(error.message || 'An error occurred');
+            }); 
+        }
+        else {
+            setErrorMessage("Password must be included more than 10 characters with letters,numbers, and special character.");
+        }
     };
+
+    // Effect to clear messages after 3 seconds
+    useEffect(() => {
+        if (errorMessage) {
+            const timer = setTimeout(() => {
+                setErrorMessage('');
+            }, 5000);
+            return () => clearTimeout(timer);
+        }
+    }, [errorMessage]);
+
+    useEffect(() => {
+        if (successMessage) {
+            const timer = setTimeout(() => {
+                setSuccessMessage('');
+            }, 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [successMessage]);
 
     const togglePasswordVisibility = () => {
         setShowPassword((prevState) => !prevState);
@@ -65,7 +95,7 @@ export default function SignupPage() {
                                     placeholder="First Name"
                                     name="firstName"
                                     value={formData.firstName}
-                                    onChange={handleChange}
+                                    onChange={handleChange} required
                                     className="w-[100%] px-2 py-2 rounded border-b border-primary text-[18px] focus:border-b-2 focus:border-primary outline-none transition duration-300"
                                 />
                             </div>
@@ -75,7 +105,7 @@ export default function SignupPage() {
                                     type="text"
                                     placeholder="Last Name"
                                     name="lastName"
-                                    value={formData.lastName}
+                                    value={formData.lastName} required
                                     onChange={handleChange}
                                     className="w-[100%] px-2 py-2 rounded border-b border-primary text-[18px] focus:border-b-2 focus:border-primary outline-none transition duration-300"
                                 />
@@ -87,7 +117,7 @@ export default function SignupPage() {
                                 type="email"
                                 placeholder="Email"
                                 name="email"
-                                value={formData.email}
+                                value={formData.email} required
                                 onChange={handleChange}
                                 className="w-[100%] px-2 py-2 rounded border-b border-primary text-[18px] focus:border-b-2 focus:border-primary outline-none transition duration-300"
                             />
@@ -98,7 +128,7 @@ export default function SignupPage() {
                                 type={showPassword ? "text" : "password"}
                                 placeholder="Password"
                                 name="password"
-                                value={formData.password}
+                                value={formData.password} required
                                 onChange={handleChange}
                                 className="w-[100%] px-2 py-2 rounded border-b border-primary text-[18px] focus:border-b-2 focus:border-primary outline-none transition duration-300"
                             />
@@ -109,6 +139,20 @@ export default function SignupPage() {
                                 {showPassword ? <FiEyeOff size={24} /> : <FiEye size={24} />}
                             </div>
                         </div>
+
+                        {
+                            errorMessage && (
+                                <div className="text-red-500 text-center py-2">
+                                    {errorMessage}
+                                </div>
+                            )
+                        }
+                        
+                        {error && (
+                            <div className="text-red-500 text-center py-2">
+                                {error.message || 'An error occurred'}
+                            </div>
+                        )}
 
                         <div className="w-full px-7 my-4 py-3 relative">
                             <button
@@ -123,13 +167,8 @@ export default function SignupPage() {
                             </div>
                         </div>
 
-                        {error && (
-                            <div className="text-red-500 text-center py-2">
-                                {error.message || 'An error occurred'}
-                            </div>
-                        )}
-
-                        {user && (
+                        
+                        {successMessage && (
                             <div className="text-green-500 text-center py-2">
                                 User created successfully!
                             </div>
