@@ -5,6 +5,8 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { postTravel } from "../../store/travelSlice";
 import { currentUser } from "../../store/userSlice";
+import { uploadImage } from "../../utils/uploadImage";
+
 
 export default function AddPost() {
   const dispatch = useDispatch();
@@ -109,6 +111,25 @@ export default function AddPost() {
     );
   };
 
+  // Handle image selection and upload
+  const handleImageChange = async (e, id) => {
+    const files = Array.from(e.target.files);
+    try {
+      const imageUrls = await Promise.all(
+        files.map((file) => uploadImage(file, "trips"))
+      );
+      setFormData((prevFormData) =>
+        prevFormData.map((form) =>
+          form.id === id ? { ...form, images: [...form.images, ...imageUrls] } : form
+        )
+      );
+    } catch (error) {
+      setErrorMessage("Image upload failed. Please try again.");
+      setTimeout(() => setErrorMessage(""), 10000);
+    }
+  };
+
+
   const handleSubmit = async (e) => {
 
     // Check if the user is logged in
@@ -182,6 +203,7 @@ export default function AddPost() {
           className={`mb-4 transition-all duration-500 ease-in-out transform 
             ${form.isVisible ? "opacity-100 scale-100" : "opacity-0 scale-75"}`}
         >
+          {/* visited place */}
           <div className="p-4 bg-primary-light rounded rounded-md flex flex-col gap-4">
             <div className="w-full flex items-center">
               <label className="w-1/3 font-semibold">Visited Place</label>
@@ -195,6 +217,7 @@ export default function AddPost() {
               />
             </div>
 
+            {/* Date visited */}
             <div className="w-full flex items-center">
               <label className="w-1/3 font-semibold">Date Visited</label>
               <input
@@ -206,6 +229,7 @@ export default function AddPost() {
               />
             </div>
 
+            {/* Rate place */}
             <div className="w-full flex items-center">
               <label className="w-1/3 font-semibold">Rate Place</label>
               <Rating
@@ -220,6 +244,7 @@ export default function AddPost() {
               />
             </div>
 
+            {/* Positive description */}
             <div className="w-full flex">
               <label className="w-1/3 font-semibold mt-2">Positive Description</label>
               <textarea
@@ -231,6 +256,7 @@ export default function AddPost() {
               />
             </div>
 
+            {/* Negative description */}
             <div className="w-full flex">
               <label className="w-1/3 font-semibold mt-2">Negative</label>
               <textarea
@@ -242,26 +268,22 @@ export default function AddPost() {
               />
             </div>
 
+            {/* image upload and preview */}
             <div className="w-full flex items-center">
               <label className="w-1/3 font-semibold">Add Images</label>
               <div className="w-2/3 flex items-center gap-4">
                 <input
-                  type="file"
-                  multiple
-                  id={`file-input-${index}`}
-                  style={{ display: "none" }}
-                />
-                <label
-                  htmlFor={`file-input-${index}`}
-                  className="cursor-pointer flex items-center"
-                >
-                  <FaPlus
-                    size={55}
-                    className="text-primary-dark border border-dashed border-primary-dark p-2 rounded hover:opacity-75 focus:outline-primary"
-                  />
+                  type="file" multiple id={`file-input-${index}`}
+                  onChange={(e) => handleImageChange(e, form.id)} style={{ display: "none" }} />
+                <label htmlFor={`file-input-${index}`} className="cursor-pointer flex items-center" >
+                  <FaPlus size={55} className="text-primary-dark border border-dashed border-primary-dark p-2 rounded" />
                 </label>
               </div>
             </div>
+            {/* Display uploaded images */}
+            {formData[index].images?.map((url, imgIndex) => (
+              <img key={imgIndex} src={url} alt="Uploaded" style={{ width: "100px", margin: "5px" }} />
+            ))}
 
             <div className="w-full flex">
               <label className="w-1/3 font-semibold mt-2">Additional Information</label>
@@ -278,8 +300,7 @@ export default function AddPost() {
               <FaTrashAlt
                 className="cursor-pointer hover:opacity-75 transition ease-in-out duration-300"
                 size={20}
-                onClick={() => removeForm(form.id)}
-              />
+                onClick={() => removeForm(form.id)} />
             </div>
           </div>
 
