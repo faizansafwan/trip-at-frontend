@@ -48,13 +48,13 @@ export default function Home() {
                                 )}
                             </div>
 
-                            <div className="flex m-5 gap-3 text-primary my-8">
+                            <div className="flex m-5 gap-3  my-8">
                                 <FaCalendarAlt size={24} />
                                 <p><b>{new Date(post.dateVisited).toLocaleDateString()}</b></p>
                             </div>
 
-                            <div className="flex m-5 gap-3 text-primary my-8 items-center">
-                                <FaBarsProgress size={24} style={{ transform: 'rotate(-90deg)' }} className="text-primary" />
+                            <div className="flex m-5 gap-3  my-8 items-center">
+                                <FaBarsProgress size={24} style={{ transform: 'rotate(-90deg)' }} className="" />
                                 <Rating
                                     count={5}
                                     value={post.ratePlace || 0}
