@@ -40,7 +40,8 @@ const travelSlice = createSlice({
         status: 'idle',
         error: null,
     },
-    reducers: {},
+    reducers: {
+    },
     extraReducers: (builder) => {
         builder
             // Handle postTravel actions
@@ -74,5 +75,6 @@ const travelSlice = createSlice({
             });
     }
 });
+
 
 export default travelSlice.reducer;
