@@ -51,7 +51,27 @@ export const currentUser =createAsyncThunk( 'user/currentUser', async (_, thunkA
         const errorMsg = error.response?.data.message || "Failed to fetch profile";
         return thunkAPI.rejectWithValue(errorMsg);
     }
-})
+});
+
+
+export const updateUser = createAsyncThunk('user/updateUser', 
+    async ({ email, firstName, lastName, password, profilePicture}, thunkAPI) => {
+
+        try{
+            const token = localStorage.getItem('token'); 
+
+            const response = await axios.put(
+                `/api/users/update?email=${email}`,
+                { firstName, lastName, password, profilePicture },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+
+            return response.data;
+        } 
+        catch (error) {
+            return thunkAPI.rejectWithValue(error.message || 'Error Occurred, Try again');
+        }
+    });
 
 const userSlice = createSlice({
     name: 'user',
@@ -61,7 +81,11 @@ const userSlice = createSlice({
         error: null,
     },
     reducers: {
-        
+        signOut: (state) => {
+            state.user = null;
+            state.status = 'idle';
+            state.error = null;
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -103,8 +127,21 @@ const userSlice = createSlice({
             .addCase(currentUser.fulfilled, (state, action) => {
                 state.status = 'succeeded';
                 state.user = action.payload;
+            })
+            .addCase(updateUser.pending, (state) => {
+                state.status = 'loading';
+                state.error = null;
+            })
+            .addCase(updateUser.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.user = action.payload; // Update the user with the new data
+            })
+            .addCase(updateUser.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.payload; // Set the error message
             });
     },
 });
 
+export const { signOut } = userSlice.actions;
 export default userSlice.reducer;
