@@ -18,6 +18,8 @@ export default function AddPost() {
   const userError = useSelector((state) => state.user.error);
   const [successMessage, setSuccessMessage] = useState("");  // State for success message
   const [errorMessage, setErrorMessage] = useState("");  // State for error message (fields empty)
+  const [loadingImageId, setLoadingImageId] = useState(null);
+
 
   const [newForm, setNewForm] = useState([{ id: Date.now(), isVisible: true }]);
 
@@ -114,6 +116,8 @@ export default function AddPost() {
   // Handle image selection and upload
   const handleImageChange = async (e, id) => {
     const files = Array.from(e.target.files);
+    setLoadingImageId(id); // Set loading indicator for this form entry
+
     try {
       const imageUrls = await Promise.all(
         files.map((file) => uploadImage(file, "trips"))
@@ -126,7 +130,10 @@ export default function AddPost() {
     } catch (error) {
       setErrorMessage("Image upload failed. Please try again.");
       setTimeout(() => setErrorMessage(""), 10000);
+    } finally {
+      setLoadingImageId(null); // Remove loading indicator once upload is done
     }
+
   };
 
 
@@ -157,7 +164,6 @@ export default function AddPost() {
     const dataWithoutIds = formData.map(({ id, ...rest }) => rest);
     console.log("Button clicked, form data:", formData);
 
-    
     try {
 
       await dispatch(postTravel(dataWithoutIds)); // Post data without `id`
@@ -180,8 +186,6 @@ export default function AddPost() {
       setTimeout(() => setErrorMessage(""), 10000); // Clear error message after 10s
     }
       
-
-    
   };
 
   return (
@@ -201,20 +205,15 @@ export default function AddPost() {
           onSubmit={handleSubmit}
           key={index}
           className={`mb-4 transition-all duration-500 ease-in-out transform 
-            ${form.isVisible ? "opacity-100 scale-100" : "opacity-0 scale-75"}`}
-        >
+            ${form.isVisible ? "opacity-100 scale-100" : "opacity-0 scale-75"}`} >
+
           {/* visited place */}
           <div className="p-4 bg-primary-light rounded rounded-md flex flex-col gap-4">
             <div className="w-full flex items-center">
               <label className="w-1/3 font-semibold">Visited Place</label>
-              <input
-                type="text"
-                name="location"
-                value={formData[index].location}
-                placeholder="e.g., Colombo Lotus Tower"
-                onChange={(e) => handleInputChange(e, form.id)}
-                className="w-2/3 p-2 border border-primary rounded focus:outline-primary"
-              />
+              <input type="text" name="location" value={formData[index].location} 
+                placeholder="e.g., Colombo Lotus Tower" onChange={(e) => handleInputChange(e, form.id)}
+                className="w-2/3 p-2 border border-primary rounded focus:outline-primary" />
             </div>
 
             {/* Date visited */}
@@ -285,6 +284,19 @@ export default function AddPost() {
               <img key={imgIndex} src={url} alt="Uploaded" style={{ width: "100px", margin: "5px" }} />
             ))}
 
+            {/* Loading Indicator */}
+            {loadingImageId === form.id && (
+              <div className="flex gap-2">
+                <div className="spinner-border animate-spin inline-block w-6 h-6 border-4 rounded-full text-primary-dark" role="status">
+                  <span className="visually-hidden"></span>
+                </div>
+                <div className="text-primary">
+                  <p>Loading...</p>
+                </div>
+              </div>
+              
+            )}
+
             <div className="w-full flex">
               <label className="w-1/3 font-semibold mt-2">Additional Information</label>
               <textarea
@@ -303,7 +315,6 @@ export default function AddPost() {
                 onClick={() => removeForm(form.id)} />
             </div>
           </div>
-
             
         </form>
       ))}
@@ -337,7 +348,7 @@ export default function AddPost() {
         <button
           className="p-3 bg-primary-dark text-white font-[500] rounded rounded-2 hover:opacity-75 transition ease-in-out duration-300"
           onClick={handleSubmit} >
-          Upload Trip
+          {travelStatus === 'loading' ? 'Loading...' : 'Upload Trip'}
         </button>
       </div>
     </div>
