@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux'
 import bgImg from '../../assets/bg.jpg'
+import userImg from '../../assets/user-profile.jpeg';
 import { useEffect } from 'react';
 import { currentUser, signOut } from '../../store/userSlice';
 import { useNavigate } from 'react-router-dom';
@@ -37,8 +38,8 @@ export default function Header() {
             <div className='pl-5'>Logo</div>
 
             <div className="relative flex flex-col items-center">
-                <div className="rounded-full cursor-pointer mr-10" onClick={toggleDropdown}>
-                    <img src={bgImg} alt="Profile" className="rounded-full" width="40px" height="45px" />
+                <div className="rounded-full cursor-pointer mr-5" onClick={toggleDropdown}>
+                    <img src={ user ? user.profilePicture : userImg} alt="Profile" className="rounded-full" width="40px" height="45px" />
                 </div>
 
                 {optionVisible && (
