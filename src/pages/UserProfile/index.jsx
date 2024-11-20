@@ -5,6 +5,7 @@ import Header from "../../components/Header";
 import { useNavigate } from "react-router-dom";
 import userImg from '../../assets/user-profile.jpeg';
 import ReactModal from "react-modal";
+import { uploadImage } from "../../utils/uploadImage";
 
 export default function UserProfile() {
     const dispatch = useDispatch();
@@ -19,6 +20,7 @@ export default function UserProfile() {
         firstName: "",
         lastName: "",
         email: "",
+        profilePicture: ""
     });
 
     useEffect(() => {
@@ -28,6 +30,7 @@ export default function UserProfile() {
                 firstName: user.firstName,
                 lastName: user.lastName,
                 email: user.email,
+                profilePicture: user.profilePicture, 
             });
         }
     }, [dispatch, user]);
@@ -35,12 +38,49 @@ export default function UserProfile() {
     const openModal = () => setModalIsOpen(true);
     const closeModal = () => setModalIsOpen(false);
 
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [uploading, setUploading] = useState(false);
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setEditUser((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleSave = () => {
+    const handleFileChange = (e) => {
+        if (e.target.files[0]) {
+            setSelectedFile(e.target.files[0]);
+        }
+    };
+
+    const handleSave = async () => {
+
+        try {
+            setUploading(true);
+
+            // Upload profile picture to Firebase if a file is selected
+            let profilePictureURL = editUser.profilePicture;
+            if (selectedFile) {
+                profilePictureURL = await uploadImage(selectedFile, "trips");
+                console.log("Uploaded image URL:", profilePictureURL);
+            }
+
+            // Update user data with the new profile picture URL
+            const updatedUser = {
+                ...editUser,
+                profilePicture: profilePictureURL
+            };
+            console.log("Updated user info:", updatedUser);
+
+            // Dispatch an action to update the user in the backend (optional)
+            // dispatch(updateUserAction(updatedUser));
+
+            closeModal();
+        } catch (error) {
+            console.error("Error updating profile:", error);
+        } finally {
+            setUploading(false);
+        }
+
         // Dispatch action to update user information
         console.log("Updated user info: ", editUser);
         closeModal();
@@ -60,7 +100,7 @@ export default function UserProfile() {
             {user ? (
                 <div className="mt-[80px] flex flex-col items-center border p-3">
                     <div className="my-5">
-                        <img
+                    <img
                             src={user.profilePicture || userImg}
                             alt="User Profile"
                             className="rounded-full"
@@ -112,7 +152,11 @@ export default function UserProfile() {
 
                         <div className="my-5 flex flex-col items-center gap-2">
                             <img
-                                src={user.profilePicture || userImg}
+                                src={
+                                    selectedFile
+                                        ? URL.createObjectURL(selectedFile)
+                                        : editUser.profilePicture || userImg
+                                }
                                 alt="User Profile"
                                 className="rounded-full"
                                 width={"80px"}
@@ -123,7 +167,7 @@ export default function UserProfile() {
                                 type="file" 
                                 id="profilePictureInput" 
                                 style={{ display: 'none' }} 
-                                // onChange={handleFileChange} 
+                                onChange={handleFileChange} 
                             />
                             {/* Label associated with the input */}
                             <label 
@@ -171,8 +215,9 @@ export default function UserProfile() {
                                     type="button"
                                     className="bg-primary text-white px-4 py-2 rounded"
                                     onClick={handleSave}
+                                    disabled={uploading}
                                 >
-                                    Save
+                                    {uploading ? "Saving..." : "Save"}
                                 </button>
                                 <button
                                     type="button"
