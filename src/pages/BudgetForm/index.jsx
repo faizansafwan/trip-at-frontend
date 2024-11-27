@@ -282,9 +282,9 @@ export default function BudgetForm() {
                         </div>
                     </div>
 
-                    {userError && <div className="text-red-500">{userError}</div>}
-                    {error && <div className="text-red-500 m-5">{error}</div>}
-                    {budgetStatus === 'succeeded' && <div className="bg-green-300 m-5">{message}</div>}
+                    {userError && <div className="text-red-500 m-5 text-center">{userError}</div>}
+                    {error && <div className="text-red-500 m-5 text-center">{error}</div>}
+                    {budgetStatus === 'succeeded' && <div className="text-green-300 m-5 text-center">{message}</div>}
 
                     <div className="flex justify-end m-5">
                         <button type="submit" className="bg-primary-dark p-2 text-white rounded focus:opacity-75">
