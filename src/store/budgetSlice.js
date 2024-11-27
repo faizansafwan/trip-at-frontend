@@ -45,6 +45,17 @@ const budgetSlice = createSlice({
             .addCase(fetchBudget.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.payload;
+            })
+            .addCase(postBudget.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(postBudget.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.budget = action.payload; // Ensure it's an array
+            })
+            .addCase(postBudget.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.payload;
             });
     },
 });
