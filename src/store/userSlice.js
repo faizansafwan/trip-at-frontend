@@ -55,18 +55,20 @@ export const currentUser =createAsyncThunk( 'user/currentUser', async (_, thunkA
 
 
 export const updateUser = createAsyncThunk('user/updateUser', 
-    async ({ email, firstName, lastName, password, profilePicture}, thunkAPI) => {
+    async ({ email, firstName, lastName, profilePicture}, thunkAPI) => {
 
         try{
             const token = localStorage.getItem('token'); 
 
             const response = await axios.put(
-                `/api/users/update?email=${email}`,
-                { firstName, lastName, password, profilePicture },
-                { headers: { Authorization: `Bearer ${token}` } }
+                `${process.env.REACT_APP_BACKEND_URL}/api/user/update?email=${email}`, { firstName, lastName, profilePicture }, { 
+                    headers: { 
+                        Authorization: `Bearer ${token}` 
+                    } 
+                }
             );
 
-            return response.data;
+            return response.data.data;
         } 
         catch (error) {
             return thunkAPI.rejectWithValue(error.message || 'Error Occurred, Try again');

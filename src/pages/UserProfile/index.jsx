@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { currentUser, signOut } from "../../store/userSlice";
+import { currentUser, signOut, updateUser } from "../../store/userSlice";
 import Header from "../../components/Header";
 import { useNavigate } from "react-router-dom";
 import userImg from '../../assets/user-profile.jpeg';
@@ -15,25 +15,32 @@ export default function UserProfile() {
     const error = useSelector((state) => state.user.error);
     const status = useSelector((state) => state.user.status);
 
+    const [successMessage, setSuccessMessage] = useState('');
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [editUser, setEditUser] = useState({
+        email: "",
         firstName: "",
         lastName: "",
-        email: "",
         profilePicture: ""
     });
 
     useEffect(() => {
         dispatch(currentUser());
+
+        
+    }, [dispatch]);
+
+    useEffect(() => {
+        
         if (user) {
             setEditUser({
-                firstName: user.firstName,
-                lastName: user.lastName,
-                email: user.email,
-                profilePicture: user.profilePicture, 
+                email: user.email || "",
+                firstName: user.firstName || "",
+                lastName: user.lastName || "",
+                profilePicture: user.profilePicture || "", 
             });
         }
-    }, [dispatch, user]);
+    }, [user]);
 
     const openModal = () => setModalIsOpen(true);
     const closeModal = () => setModalIsOpen(false);
@@ -72,7 +79,14 @@ export default function UserProfile() {
             console.log("Updated user info:", updatedUser);
 
             // Dispatch an action to update the user in the backend (optional)
-            // dispatch(updateUserAction(updatedUser));
+            await dispatch(updateUser(updatedUser));
+            if (status === 'succeeded') {
+                setSuccessMessage("Profile successfully updated! ");
+
+                setTimeout( () => {
+                    setSuccessMessage('');
+                }, 10000);
+            }
 
             closeModal();
         } catch (error) {
@@ -84,6 +98,7 @@ export default function UserProfile() {
         // Dispatch action to update user information
         console.log("Updated user info: ", editUser);
         closeModal();
+
     };
 
     const handleSignout = () => {
@@ -95,7 +110,7 @@ export default function UserProfile() {
     if (status === "failed") return <p className="text-red-400 m-10">Error: {error}</p>;
 
     return (
-        <div className="">
+        <div className="mx-10 ">
             <Header />
             {user ? (
                 <div className="mt-[80px] flex flex-col items-center border p-3">
@@ -129,6 +144,10 @@ export default function UserProfile() {
                         </button>
                     </div>
 
+                    {
+                        status === 'succeeded' && <div className="text-green-300 p-2 m-5">{successMessage}</div> 
+                    }
+
                     {/* React Modal */}
                     <ReactModal
                         isOpen={modalIsOpen}
@@ -148,84 +167,43 @@ export default function UserProfile() {
                         }}
                     >
                         <h2 className="font-[500]">Edit Profile</h2>
-                        <form>
+                        <form onSubmit={handleSave}>
 
-                        <div className="my-5 flex flex-col items-center gap-2">
-                            <img
-                                src={
-                                    selectedFile
-                                        ? URL.createObjectURL(selectedFile)
-                                        : editUser.profilePicture || userImg
-                                }
-                                alt="User Profile"
-                                className="rounded-full"
-                                width={"80px"}
-                                height={"80px"}
-                            />
-                            {/* Hidden file input */}
-                            <input 
-                                type="file" 
-                                id="profilePictureInput" 
-                                style={{ display: 'none' }} 
-                                onChange={handleFileChange} 
-                            />
-                            {/* Label associated with the input */}
-                            <label 
-                                htmlFor="profilePictureInput" 
-                                className="text-primary-dark cursor-pointer">
-                                Update Profile
-                            </label> 
-                        </div>
+                            <div className="my-5 flex flex-col items-center gap-2">
+                                <img src={ selectedFile ? URL.createObjectURL(selectedFile) : editUser.profilePicture 
+                                || userImg } alt="User Profile" className="rounded-full" width={"80px"} height={"80px"} />
+                                {/* Hidden file input */}
+                                <input type="file" id="profilePictureInput" style={{ display: 'none' }} 
+                                onChange={handleFileChange} />
+                                {/* Label associated with the input */}
+                                <label htmlFor="profilePictureInput" className="text-primary-dark cursor-pointer">
+                                    Update Profile
+                                </label> 
+                            </div>
 
                             <div className="my-3">
                                 <label htmlFor="firstName">First Name</label>
-                                <input
-                                    type="text"
-                                    id="firstName"
-                                    name="firstName"
-                                    value={editUser.firstName}
-                                    onChange={handleInputChange}
-                                    className="border p-2 w-full"
-                                />
+                                <input type="text" id="firstName" name="firstName" value={editUser.firstName}
+                                    onChange={handleInputChange} className="border p-2 w-full" />
                             </div>
                             <div className="my-3">
                                 <label htmlFor="lastName">Last Name</label>
-                                <input
-                                    type="text"
-                                    id="lastName"
-                                    name="lastName"
-                                    value={editUser.lastName}
-                                    onChange={handleInputChange}
-                                    className="border p-2 w-full"
-                                />
+                                <input type="text" id="lastName" name="lastName" value={editUser.lastName}
+                                    onChange={handleInputChange} className="border p-2 w-full" />
                             </div>
                             <div className="my-3">
                                 <label htmlFor="email">Email</label>
-                                <input
-                                    type="email" disabled
-                                    id="email"
-                                    name="email" 
-                                    value={editUser.email}
-                                    onChange={handleInputChange}
-                                    className="border p-2 w-full"
-                                />
+                                <input type="email" disabled id="email" name="email" value={editUser.email}
+                                    onChange={handleInputChange} className="border p-2 w-full" />
                             </div>
+
                             <div className="flex gap-3 mt-4">
-                                <button
-                                    type="button"
-                                    className="bg-primary text-white px-4 py-2 rounded"
-                                    onClick={handleSave}
-                                    disabled={uploading}
-                                >
+                                <button type="submit" className="bg-primary text-white px-4 py-2 rounded"
+                                    onClick={handleSave} disabled={uploading} >
                                     {uploading ? "Saving..." : "Save"}
                                 </button>
-                                <button
-                                    type="button"
-                                    className="bg-gray-500 text-white px-4 py-2 rounded"
-                                    onClick={closeModal}
-                                >
-                                    Cancel
-                                </button>
+                                <button type="button" className="bg-gray-500 text-white px-4 py-2 rounded"
+                                    onClick={closeModal} > Cancel </button>
                             </div>
                         </form>
                     </ReactModal>
