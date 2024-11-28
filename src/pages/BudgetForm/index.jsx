@@ -3,6 +3,7 @@ import { FaX } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import { postBudget } from "../../store/budgetSlice";
 import { currentUser } from "../../store/userSlice";
+import { useNavigate } from "react-router-dom";
 
 export default function BudgetForm() {
     
@@ -13,10 +14,11 @@ export default function BudgetForm() {
     const [budgetContent, setBudgetContent] = useState('');
     const [cost, setCost] = useState('');
     const [totalCost, setTotalCost] = useState(0);
-    const [message, setMessage] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
 
     const [formData, setFormData] = useState({
-        email: user.email,
+        email: '',
         budgetName: '',
         start: '',
         destination: '',
@@ -28,6 +30,7 @@ export default function BudgetForm() {
     });
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     
 
@@ -39,9 +42,22 @@ export default function BudgetForm() {
     useEffect( () => {
         if (userStatus === 'succeeded') {
             dispatch(currentUser());
+            if (user) {
+                setFormData((prevData) => ({
+                    ...prevData,
+                    email: user.email,
+                }));  
+            }
+
+            
+        }
+        else if ( userStatus === 'failed') {
+            setErrorMessage('Please Login Again!');
+            setTimeout( () => setErrorMessage(''), 3000);
+            navigate('/login');
         }
         
-    }, [dispatch, userStatus]);
+    }, [dispatch, userStatus, user, navigate]);
 
 
     const handleBudgetNameChange = (e) => {
@@ -96,7 +112,7 @@ export default function BudgetForm() {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         // Prepare the data to send
@@ -113,11 +129,12 @@ export default function BudgetForm() {
         };
         console.log(budgetData);
         // Dispatch the action to post the budget data
-        dispatch(postBudget(budgetData))
+        await dispatch(postBudget(budgetData))
             .then(() => {
-                setMessage('Budget successfully posted!');
+                setSuccessMessage('Budget successfully posted!');
+                setErrorMessage('');
                 setFormData({
-                    email: 'ads@gmail.com',
+                    email: user.email,
                     budgetName: '',
                     start: '',
                     destination: '',
@@ -128,9 +145,19 @@ export default function BudgetForm() {
                     cost: [],
                 }); // Reset form after successful submit
                 setTotalCost(0);
+
+                setTimeout( () => {
+                    setSuccessMessage('');
+                }, 10000);
+
+                
             })
             .catch((error) => {
-                setMessage(error.message || 'An error occurred while posting the budget');
+                setErrorMessage(error.message || 'An error occurred while posting the budget');
+
+                setTimeout( () => {
+                    setErrorMessage('');
+                }, 10000);
             });
     };
 
@@ -206,14 +233,10 @@ export default function BudgetForm() {
                     </div>
 
                     <div className="mt-10">
-                        <select
-                            name="unit"
-                            value={formData.unit}
-                            onChange={handleChange}
-                            className="p-2 outline-none"
-                        >
-                            <option value="USD">USD</option>
+                        <select name="unit" value={formData.unit} onChange={handleChange} className="p-2 outline-none" >
+                            <option value="USD">Select Currency</option>
                             <option value="LKR">LKR</option>
+                            <option value="USD">USD</option>
                             <option value="INR">INR</option>
                             <option value="EUR">EUR</option>
                         </select>
@@ -282,9 +305,10 @@ export default function BudgetForm() {
                         </div>
                     </div>
 
-                    {userError && <div className="text-red-500 m-5 text-center">{userError}</div>}
-                    {error && <div className="text-red-500 m-5 text-center">{error}</div>}
-                    {budgetStatus === 'succeeded' && <div className="text-green-300 m-5 text-center">{message}</div>}
+                    { errorMessage && <div className="text-red-500 m-5 text-center">{errorMessage}</div>}
+                    {/* {error && <div className="text-red-500 m-5 text-center">{error}</div>} */}
+                    {budgetStatus === 'succeeded' ? <div className="text-green-300 m-5 text-center">{successMessage}</div> 
+                    : <div className="text-red-500 m-5 text-center">{error}</div>}
 
                     <div className="flex justify-end m-5">
                         <button type="submit" className="bg-primary-dark p-2 text-white rounded focus:opacity-75">
