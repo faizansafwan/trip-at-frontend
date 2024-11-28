@@ -1,18 +1,28 @@
 import { FaPlus } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchBudget } from "../../store/budgetSlice";
+import { fetchBudget , fetchBudgetByEmail} from "../../store/budgetSlice";
 import { useEffect } from "react";
+import { currentUser } from "../../store/userSlice";
 
 export default function Budget() {
     const budgets = useSelector((state) => state.budget.budget);
     const status = useSelector((state) => state.budget.status);
     const error = useSelector((state) => state.budget.error);
 
+    const user = useSelector( (state) => state.user.user);
+
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(fetchBudget());
+        dispatch(currentUser());
     }, [dispatch]);
+
+    useEffect(() => {
+        if (user) {
+           dispatch(fetchBudgetByEmail(user.email)); 
+        }
+        
+    }, [dispatch, user]);
 
     console.log(budgets); // Debugging purposes: Check structure of budget data
 
