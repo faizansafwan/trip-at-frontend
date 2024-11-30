@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { currentUser, signOut, updateUser } from "../../store/userSlice";
-import Header from "../../components/Header";
 import { useNavigate } from "react-router-dom";
 import userImg from '../../assets/user-profile.jpeg';
 import ReactModal from "react-modal";
 import { uploadImage } from "../../utils/uploadImage";
+import Header from "../../components/Header";
+import { FaArrowRightArrowLeft } from "react-icons/fa6";
+
 
 export default function UserProfile() {
     const dispatch = useDispatch();
@@ -40,7 +42,11 @@ export default function UserProfile() {
                 profilePicture: user.profilePicture || "", 
             });
         }
-    }, [user]);
+
+        else if(!user) {
+            navigate('/login');
+        }
+    }, [user, navigate]);
 
     const openModal = () => setModalIsOpen(true);
     const closeModal = () => setModalIsOpen(false);
@@ -109,11 +115,15 @@ export default function UserProfile() {
 
     if (status === "failed") return <p className="text-red-400 m-10">Error: {error}</p>;
 
-    return (
-        <div className="mx-10 ">
+    return (    
+        <div className="mx-10">
             <Header />
             {user ? (
                 <div className="mt-[80px] flex flex-col items-center border p-3">
+
+                    <div>
+                        <FaArrowRightArrowLeft size={25} />
+                    </div>
                     <div className="my-5">
                     <img
                             src={user.profilePicture || userImg}
@@ -213,6 +223,7 @@ export default function UserProfile() {
                     <p className="text-primary-dark m-10">Loading profile...</p>
                 </div>
             )}
-        </div>
+        </div> 
+        
     );
 }
