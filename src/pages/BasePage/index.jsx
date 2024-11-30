@@ -8,6 +8,7 @@ import Contact from "../Contact";
 import Home from "../Home";
 import { useState } from "react";
 import BudgetForm from "../BudgetForm";
+import BudgetDetail from "../BudgetDetail";
 
 export default function BasePage() {
 
@@ -17,8 +18,6 @@ export default function BasePage() {
   const hideAndShow = () => {
     setHideNav(!hideNav);
   }  
-
-  
 
     let currentPage;
     switch(window.location.pathname) {
@@ -37,6 +36,9 @@ export default function BasePage() {
       case "/budget":
         currentPage = <Budget />
         break;
+      case "/budget/budget-detail":
+        currentPage = <BudgetDetail />
+        break;
       case "/budget/budget-form":
         currentPage = <BudgetForm />
         break;
@@ -50,13 +52,10 @@ export default function BasePage() {
                  <Header />
               </div>
              
-
               <div className="fixed top-0 left-4 flex h-[50px] items-center z-[200] lg:hidden">
                   <FaBars size={24} onClick={hideAndShow}  />
               </div>
             </div>
-
-            
 
             <div className="flex gap-5 w-full">
                 <div className={`mt-[50px]  ${hideNav ? 'block' : 'hidden'} lg:block`}>

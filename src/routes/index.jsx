@@ -5,6 +5,8 @@ import Accomadation from '../pages/Accomadation';
 import Budget from '../pages/Budget';
 import Contact from '../pages/Contact';
 import BudgetForm from "../pages/BudgetForm";
+import UserProfile from "../pages/UserProfile";
+import BudgetDetail from "../pages/BudgetDetail";
 
 
 export default function NavLinks() {
@@ -16,6 +18,7 @@ export default function NavLinks() {
             <Route path='/accomadation' element={ <Accomadation /> } />
             <Route path='/budget' element={ <Budget /> } />
             <Route path='/contact' element={ <Contact /> } />
+            <Route path="/budget/budget-detail" element={ <BudgetDetail />} />
             <Route path="/budget/budget-form" element={ <BudgetForm />} />
         </Routes>
     )
