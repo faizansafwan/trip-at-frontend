@@ -17,10 +17,10 @@ export const postBudget = createAsyncThunk( 'budget/postBudget', async (budget, 
 });
 
 
-export const fetchBudget = createAsyncThunk('budget/fetchBudget', async (_, thunkAPI) => {
+export const fetchBudgetById = createAsyncThunk('budget/fetchBudgetById', async (id, {thunkAPI}) => {
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/budget`, {
+        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/budget/find/${id}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             }
@@ -52,20 +52,21 @@ const budgetSlice = createSlice({
     name: 'budget',
     initialState: {
         budget: [], // Ensure this is an array
+        selectedBudget: null,
         status: 'idle',
         error: null,
     },
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(fetchBudget.pending, (state) => {
+            .addCase(fetchBudgetById.pending, (state) => {
                 state.status = 'loading';
             })
-            .addCase(fetchBudget.fulfilled, (state, action) => {
+            .addCase(fetchBudgetById.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                state.budget = action.payload; // Ensure it's an array
+                state.selectedBudget = action.payload; // Ensure it's an array
             })
-            .addCase(fetchBudget.rejected, (state, action) => {
+            .addCase(fetchBudgetById.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.payload;
             })
