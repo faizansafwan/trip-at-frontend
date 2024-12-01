@@ -8,7 +8,7 @@ import Contact from "../Contact";
 import Home from "../Home";
 import { useState } from "react";
 import BudgetForm from "../BudgetForm";
-import BudgetDetail from "../BudgetDetail";
+
 
 export default function BasePage() {
 
@@ -35,9 +35,6 @@ export default function BasePage() {
         break;
       case "/budget":
         currentPage = <Budget />
-        break;
-      case "/budget/budget-detail":
-        currentPage = <BudgetDetail />
         break;
       case "/budget/budget-form":
         currentPage = <BudgetForm />

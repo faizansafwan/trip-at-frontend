@@ -18,7 +18,6 @@ export default function NavLinks() {
             <Route path='/accomadation' element={ <Accomadation /> } />
             <Route path='/budget' element={ <Budget /> } />
             <Route path='/contact' element={ <Contact /> } />
-            <Route path="/budget/budget-detail" element={ <BudgetDetail />} />
             <Route path="/budget/budget-form" element={ <BudgetForm />} />
         </Routes>
     )
