@@ -11,7 +11,7 @@ export const postAccomadation = createAsyncThunk( 'accomadation/postAccomadation
                 Authorization: `Bearer ${token}`,
             }
         });
-        return response.data;
+        return response.data.data;
     } 
     catch (error) {
         return thunkAPI.rejectWithValue(error.response?.data?.message || 'An error occurred');
@@ -29,12 +29,24 @@ export const fetchAccomadation = createAsyncThunk('accomadation/fetchAccomadatio
     }
 });
 
+export const fetchAccomadationById = createAsyncThunk('accomadation/fetchAccomadationById', async ( id, {thunkAPI}) => {
+    try {
+        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/accomadation/${id}`);
+        
+        return response.data.data;
+    } catch (error) {
+        return thunkAPI.rejectWithValue(error.response?.data?.message || 'An error occurred');
+    }
+});
+
  
 
 const accomadationSlice = createSlice({
     name: 'accomadation',
     initialState: {
         accomadation: [], // Ensure this is an array
+        post: null,
+        selectedAccommodation: null,
         status: 'idle',
         error: null,
     },
@@ -57,9 +69,20 @@ const accomadationSlice = createSlice({
             })
             .addCase(postAccomadation.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                state.accomadation = action.payload; // Ensure it's an array
+                state.post = action.payload; 
             })
             .addCase(postAccomadation.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.payload;
+            })
+            .addCase(fetchAccomadationById.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(fetchAccomadationById.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.selectedAccommodation = action.payload; 
+            })
+            .addCase(fetchAccomadationById.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.payload;
             });
