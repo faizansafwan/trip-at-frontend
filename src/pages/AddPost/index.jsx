@@ -6,12 +6,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { postTravel } from "../../store/travelSlice";
 import { currentUser } from "../../store/userSlice";
 import { uploadImage } from "../../utils/uploadImage";
+import { useNavigate } from "react-router-dom";
 
 
 export default function AddPost() {
   const dispatch = useDispatch();
   const travelStatus = useSelector((state) => state.travel.status);
   const travelError = useSelector((state) => state.travel.error);
+
+  const navigate = useNavigate();
 
   const user = useSelector((state) => state.user.user);
   const userStatus = useSelector((state) => state.user.status);
@@ -56,7 +59,10 @@ export default function AddPost() {
         }))
       );
     }
-  }, [user]);
+    else if (userStatus === 'failed') {
+      navigate('/login');
+    }
+  }, [ navigate, user, userStatus]);
 
   const validateForm = () => {
     // Check that all required fields are filled
@@ -142,9 +148,11 @@ export default function AddPost() {
     // Check if the user is logged in
     if (!user || userStatus !== "succeeded") {
       setErrorMessage("You are not logged in. Please log in to submit a trip.");
+      navigate('/login');
       setTimeout(() => {
         setErrorMessage(""); // Clear the error message after 10 seconds
       }, 10000);
+
       return; // Stop the form submission
     }
 
