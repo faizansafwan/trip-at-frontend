@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { currentUser, signOut, updateUser } from "../../store/userSlice";
 import { useNavigate } from "react-router-dom";
-import userImg from '../../assets/user-profile.jpeg';
+import userImg from '../../assets/user-profile.jpg';
 import ReactModal from "react-modal";
 import { uploadImage } from "../../utils/uploadImage";
 import Header from "../../components/Header";
-import { FaArrowRightArrowLeft } from "react-icons/fa6";
+import { FaArrowLeftLong, FaArrowRightArrowLeft } from "react-icons/fa6";
 
 
 export default function UserProfile() {
@@ -118,12 +118,11 @@ export default function UserProfile() {
     return (    
         <div className="mx-10">
             <Header />
+            
             {user ? (
                 <div className="mt-[80px] flex flex-col items-center border p-3">
 
-                    <div>
-                        <FaArrowRightArrowLeft size={25} />
-                    </div>
+                    
                     <div className="my-5">
                     <img
                             src={user.profilePicture || userImg}

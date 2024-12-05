@@ -1,8 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchTravel } from "../../store/travelSlice";
-import { FaCalendarAlt } from "react-icons/fa"
-import bgImg from "../../assets/bg.jpg"
+import { FaCalendarAlt, FaGreaterThan, FaLessThan } from "react-icons/fa"
+import userImg from "../../assets/user-profile.jpg"
 import { FaBarsProgress } from "react-icons/fa6"
 import Rating from "react-stars";
 
@@ -13,9 +13,25 @@ export default function Home() {
         dispatch(fetchTravel());
     }, [dispatch]);
 
+
+    const [imageIndices, setImageIndices] = useState({}); // Object to store indices for each post
     const travelData = useSelector((state) => state.travel.travel?.data || []);
     const status = useSelector((state) => state.travel.status);
     const error = useSelector((state) => state.travel.error);
+
+    const handleImgIncrement = (postId, imagesLength) => {
+        setImageIndices((prevIndices) => ({
+            ...prevIndices,
+            [postId]: (prevIndices[postId] || 0) + 1 >= imagesLength ? 0 : (prevIndices[postId] || 0) + 1,
+        }));
+    };
+
+    const handleImgDecrement = (postId, imagesLength) => {
+        setImageIndices((prevIndices) => ({
+            ...prevIndices,
+            [postId]: (prevIndices[postId] || 0) - 1 < 0 ? imagesLength - 1 : (prevIndices[postId] || 0) - 1,
+        }));
+    };
 
     return (
         <div>
@@ -29,7 +45,7 @@ export default function Home() {
                         <div key={post._id} className="p-2 px-4 bg-primary-light rounded shadow-lg">
                             <div className="flex gap-2">
                                 <div className="mt-1">
-                                    <img src={post.userProfile} alt="Profile" className="w-[40px] h-[40px] rounded-[30px]" />
+                                    <img src={post.userProfile || userImg} alt="Profile" className="w-[40px] h-[40px] rounded-[30px]" />
                                 </div>
 
                                 <div className="flex flex-col">
@@ -42,10 +58,28 @@ export default function Home() {
                                 </div>
                             </div>
 
-                            <div className="flex justify-center m-4">
-                                {post.images && post.images[0] && (
-                                    <img src={post.images[0]} alt="" className="w-full h-auto rounded" />
+                            <div className="flex justify-center items-center mt-3">
+
+                                { post?.images && post.images.length > 1 && ( 
+                                    <div className='pr-1 hover:opacity-75'>
+                                        <FaLessThan size={20} onClick={ () => {
+                                            handleImgDecrement(post._id, post.images.length)}}  />
+                                    </div>  
                                 )}
+                                
+                                {post.images && (
+                                    <img src={post.images[imageIndices[post._id] || 0]} alt="" 
+                                    className="w-[300px] h-auto object-cover rounded" />
+                                )}
+
+                                { post?.images && post.images.length > 1 && ( 
+                                    <div className='pl-1 hover:opacity-75'>
+                                        <FaGreaterThan size={20} onClick={() => {
+                                            handleImgIncrement(post._id, post.images.length)
+                                        }}  /> 
+                                    </div>
+                                )}
+
                             </div>
 
                             <div className="flex m-5 gap-3  my-8">
