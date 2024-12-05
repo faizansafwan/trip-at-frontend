@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux'
-import bgImg from '../../assets/bg.jpg'
-import userImg from '../../assets/user-profile.jpeg';
+import logo from '../../assets/trip-at-logo.png';
+import userImg from '../../assets/user-profile.jpg';
 import { useEffect } from 'react';
 import { currentUser, signOut } from '../../store/userSlice';
 import { useNavigate } from 'react-router-dom';
@@ -34,12 +34,14 @@ export default function Header() {
     };
 
     return(
-        <div className="w-full h-[50px] bg-primary-dark fixed top-0 left-0 z-[100] flex items-center justify-between items-center"> 
-            <div className='pl-5'>Logo</div>
+        <div className="w-full h-[60px] bg-white fixed top-0 left-0 z-[100] flex items-center justify-between items-center shadow-b-md"> 
+            <div className='pl-5'>
+                <img src={logo} alt="" className='w-[70px] h-auto' />
+            </div>
 
             <div className="relative flex flex-col items-center">
                 <div className="rounded-full cursor-pointer mr-5" onClick={toggleDropdown}>
-                    <img src={ user ? user.profilePicture : userImg} alt="Profile" className="rounded-full" width="30px" height="30px" />
+                    <img src={ user ? user.profilePicture : userImg} alt="Profile" className="rounded-full object-cover" width="40px" height="50px" />
                 </div>
 
                 {optionVisible && (
