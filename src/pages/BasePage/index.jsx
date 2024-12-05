@@ -59,7 +59,7 @@ export default function BasePage() {
             </div>
 
             <div className="flex gap-5 w-full">
-                <div className={`mt-[50px]  ${hideNav ? 'block' : 'hidden'} lg:block`}>
+                <div className={`mt-[50px]  ${hideNav ? 'block ' : 'hidden '} transition-transform duration-500 ease-in-out lg:block`}>
                     <LeftNav />
                 </div>
 

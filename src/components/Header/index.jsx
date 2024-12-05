@@ -35,8 +35,8 @@ export default function Header() {
 
     return(
         <div className="w-full h-[60px] bg-white fixed top-0 left-0 z-[100] flex items-center justify-between items-center shadow-b-md"> 
-            <div className='pl-5'>
-                <img src={logo} alt="" className='w-[70px] h-auto' />
+            <div className='pl-5 m-[10%]'>
+                <a href="/"><img src={logo} alt="" className='w-[60px] h-auto' /></a>
             </div>
 
             <div className="relative flex flex-col items-center">
