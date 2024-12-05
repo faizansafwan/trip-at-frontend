@@ -168,10 +168,10 @@ export default function Accomadation() {
                 { status === 'succeeded' ? (
                     (showFiltered ? filteredAccomadation : accomadation).map( (place, index) => (
                     <div key={index} className="p-2 flex gap-2  bg-primary-light rounded">
-                        <div className='w-[45%]'>
+                        <div className='w-1/2'>
                             <img src={place.images} alt=""  className=' w-full h-full rounded cover'   />
                         </div>
-                        <div className='p-2'>
+                        <div className='p-2 w-1/2'>
                             <div className='mb-2'><p className=' font-semibold text-[15px]'>{place.name}</p></div>
                             <div className=''><p className='text-[13px]'>{place.address}</p></div>
                             <div className='my-3'><p className='text-[12px]'>{limitText(place.description, 30)}</p></div>

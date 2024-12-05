@@ -233,7 +233,7 @@ export default function BudgetForm() {
                     </div>
 
                     <div className="mt-10">
-                        <select name="unit" value={formData.unit} onChange={handleChange} className="p-2 outline-none" >
+                        <select name="unit" value={formData.unit} onChange={handleChange} className="p-2 outline-none cursor-pointer" >
                             <option value="USD">Select Currency</option>
                             <option value="LKR">LKR</option>
                             <option value="USD">USD</option>
@@ -305,10 +305,10 @@ export default function BudgetForm() {
                         </div>
                     </div>
 
-                    { errorMessage && <div className="text-red-500 m-5 text-center">{errorMessage}</div>}
+                    { errorMessage && <div className="p-4 bg-red-100 mt-4 text-red-700 text-center rounded">{errorMessage}</div>}
                     {/* {error && <div className="text-red-500 m-5 text-center">{error}</div>} */}
-                    {budgetStatus === 'succeeded' ? <div className="text-green-300 m-5 text-center">{successMessage}</div> 
-                    : <div className="text-red-500 m-5 text-center">{error}</div>}
+                    { successMessage && <div className="p-4 bg-green-100 text-green-700 mt-4 text-center rounded">{successMessage}</div> }
+                    { error && <div className="p-4 bg-red-100 mt-4 text-red-700 text-center rounded">{error}</div>}
 
                     <div className="flex justify-end m-5">
                         <button type="submit" className="bg-primary-dark p-2 text-white rounded focus:opacity-75">

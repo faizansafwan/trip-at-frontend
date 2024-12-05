@@ -72,10 +72,10 @@ export default function Budget() {
                     budgets.map((budget) => (
                         <div key={budget._id}>
                             <div className="cursor-pointer bg-primary-light p-3 rounded flex justify-between hover:opacity-75 transition ease-in duration-300">
-                                <div className="py-2 font-[500]" onClick={() => handleId(budget._id)}>
+                                <div className="p-2 font-[500]" onClick={() => handleId(budget._id)}>
                                     {budget.budgetName}
                                 </div>
-                                <div className="py-2 font-[500]" onClick={() => handleId(budget._id)}>
+                                <div className="p-2 font-[500]" onClick={() => handleId(budget._id)}>
                                     Rs. {budget.cost.reduce((total, num) => total + num, 0).toFixed(2)}
                                 </div>
                                 <div className="p-2 relative">
@@ -183,8 +183,7 @@ export default function Budget() {
 
             <div className="fixed bottom-12 right-12">
                 <a href="/budget/budget-form">
-                    <FaPlus
-                        size={40}
+                    <FaPlus size={40}
                         className="cursor-pointer text-white bg-primary-dark p-1 rounded-full shadow-lg hover:opacity-75 transition ease-out duration-300"
                     />
                 </a>

@@ -70,7 +70,10 @@ export default function AccomadationForm() {
 
         }
 
-        setError("");
+        setTimeout( () => {
+            setError("");
+        }, 10000);
+        
         setSuccess('');
         setIsSubmitting(true);
 
@@ -243,11 +246,12 @@ export default function AccomadationForm() {
                         </div>
 
                         {/* Uploaded Images Preview */}
-                        <div className="flex gap-2 flex-wrap">
-                            {formData.images.map((image, index) => (
-                                <img key={index} src={image} alt="Uploaded" className="w-20 h-20 object-cover" />
+                        
+                            {formData.images.map((image, index) => (<div className="flex gap-2 flex-row ">
+                                <img key={index} src={image} alt="Uploaded" className="w-[100px] h-[100px] object-cover" />
+                                </div>
                             ))}
-                        </div>
+                        
 
                         {/* Loading Indicator
                         {loadingImageId && (
@@ -262,10 +266,10 @@ export default function AccomadationForm() {
                         )} */}
 
                         {/* Error Message */}
-                        {error && <div className="text-red-500 mt-2 text-center">{error}</div>}
+                        {error && <div className="p-4 bg-red-100 mt-4 text-red-700 text-center rounded mb-4">{error}</div>}
 
                         {/* Success Message */}
-                        {success && <div className="text-green-300 mt-2 text-center">{success}</div>}
+                        {success && <div className="p-4 bg-green-100 text-green-700 mt-4 text-center rounded mb-4">{success}</div>}
 
                         <div className="flex justify-end">
                             <button type="submit" disabled={status === 'loading'} className="p-3 bg-primary-dark text-white font-[500] rounded rounded-2 hover:opacity-75 transition ease-in-out duration-300 ">

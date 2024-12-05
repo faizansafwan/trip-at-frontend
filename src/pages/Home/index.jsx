@@ -53,7 +53,7 @@ export default function Home() {
                                         <p><b>{post.firstName} {post.lastName}</b> is at <b className="text-primary-dark">{post.location}</b></p>
                                     </div>
                                     <div>
-                                        <p className="text-[12px]">{new Date(post.dateVisited).toLocaleDateString()}</p>
+                                        <p className="text-[12px]">{new Date(post.registeredDate).toLocaleDateString()}</p>
                                     </div>
                                 </div>
                             </div>
