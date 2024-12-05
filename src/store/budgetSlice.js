@@ -46,6 +46,20 @@ export const fetchBudgetByEmail = createAsyncThunk('budget/fetchBudgetByEmail', 
         return thunkAPI.rejectWithValue(error.response?.data?.message || 'An error occurred');
     }
 });
+
+export const deleteBudget = createAsyncThunk('budget/deleteBudget', async (id, thunkAPI) => {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await axios.delete(`${process.env.REACT_APP_BACKEND_URL}/api/budget/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
+        return response.data; // Return the ID of the deleted budget
+    } catch (error) {
+        return thunkAPI.rejectWithValue(error.response?.data?.message || 'An error occurred');
+    }
+});
  
 
 const budgetSlice = createSlice({
@@ -89,6 +103,18 @@ const budgetSlice = createSlice({
                 state.budget = action.payload; // Ensure it's an array
             })
             .addCase(fetchBudgetByEmail.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.payload;
+            })
+            .addCase(deleteBudget.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(deleteBudget.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                // Remove the deleted budget from the state
+                state.budget = state.budget.filter((item) => item._id !== action.payload);
+            })
+            .addCase(deleteBudget.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.payload;
             });
