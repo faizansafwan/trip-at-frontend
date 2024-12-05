@@ -3,7 +3,7 @@ import bgImg from '../../assets/bg.jpg';
 import Rating from 'react-stars';
 import { useEffect, useState } from 'react';
 import { fetchAccomadation, fetchAccomadationById } from '../../store/AccomadationSlice';
-import { FaPlus } from 'react-icons/fa';
+import { FaGreaterThan, FaLessThan, FaPlus } from 'react-icons/fa';
 import ReactModal from 'react-modal';
 import { FaX } from 'react-icons/fa6';
 
@@ -34,7 +34,7 @@ export default function Accomadation() {
 
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [id, setId] = useState('');
-
+    const [index, setIndex] = useState(0);
 
     useEffect( () => {
         if (id) {
@@ -54,6 +54,20 @@ export default function Accomadation() {
         setId(id);
         setModalIsOpen(true);
         console.log(id);    
+    };
+
+    const handleImgIncrement = () => {
+        if (SelectedAcc?.images) {
+            setIndex((prevIndex) => (prevIndex + 1) % SelectedAcc.images.length); // Loop to the first image
+        }
+    };
+
+    const handleImgDecrement = () => {
+        if (SelectedAcc?.images) {
+            setIndex((prevIndex) =>
+                (prevIndex - 1 + SelectedAcc.images.length) % SelectedAcc.images.length // Loop to the last image
+            );
+        }
     };
 
     const handleSearch = ( () => {
@@ -154,27 +168,27 @@ export default function Accomadation() {
                 { status === 'succeeded' ? (
                     (showFiltered ? filteredAccomadation : accomadation).map( (place, index) => (
                     <div key={index} className="p-2 flex gap-2  bg-primary-light rounded">
+                        <div className='w-[45%]'>
+                            <img src={place.images} alt=""  className=' w-full h-full rounded cover'   />
+                        </div>
+                        <div className='p-2'>
+                            <div className='mb-2'><p className=' font-semibold text-[15px]'>{place.name}</p></div>
+                            <div className=''><p className='text-[13px]'>{place.address}</p></div>
+                            <div className='my-3'><p className='text-[12px]'>{limitText(place.description, 30)}</p></div>
                             <div>
-                                <img src={place.images} alt="" width={'200px'} height={'250px'} className='rounded'   />
+                                <p className='text-[13px] font-semibold'>{place.unit} {place.price.toFixed(2)} per {place.type}
+                                </p>
                             </div>
-                            <div className='p-2'>
-                                <div className='mb-2'><p className=' font-semibold text-[15px]'>{place.name}</p></div>
-                                <div className=''><p className='text-[13px]'>{place.address}</p></div>
-                                <div className='my-3'><p className='text-[12px]'>{limitText(place.description, 30)}</p></div>
-                                <div>
-                                    <p className='text-[13px] font-semibold'>{place.unit} {place.price.toFixed(2)} per {place.type}
-                                    </p>
-                                </div>
-                                {
-                                    place.rating ? (<div>
-                                    <Rating count={5} value={place.rating} size={20} color1="gray" color2="#316EFF" half={false}
-                                    edit={false} className="focus:outline-primary" />
-                                </div>) : (<div> </div>)
-                                }
-                                
-                                <div><button onClick={ () => handleId(place._id)} className='p-2 mt-3 rounded rounded-full bg-primary-dark text-white text-[13px]'>More Details</button></div>
-                            </div>
-                        </div> 
+                            {
+                                place.rating ? (<div>
+                                <Rating count={5} value={place.rating} size={20} color1="gray" color2="#316EFF" half={false}
+                                edit={false} className="focus:outline-primary" />
+                            </div>) : (<div> </div>)
+                            }
+                            
+                            <div><button onClick={ () => handleId(place._id)} className='p-2 mt-3 rounded rounded-full bg-primary-dark text-white text-[13px]'>More Details</button></div>
+                        </div>
+                    </div> 
                     ))
                     
                 ): ( <div>No Accommadation Found</div> )}
@@ -204,7 +218,7 @@ export default function Accomadation() {
                         padding: "10px",
                         height: 'auto',
                         maxHeight: 'auto',
-                        maxWidth: "60%",
+                        maxWidth: "80%",
                         margin: "auto",
                         zIndex: 120,
                     },
@@ -214,13 +228,39 @@ export default function Accomadation() {
                         <button onClick={closeModal}><FaX size={20} /></button>
                     </div>
 
-                    <div className='flex gap-3 m-4'>
+                    <div className='flex gap-3 m-3 '>
 
-                        <div className='w-1/2'>
-                            {/* <img src={SelectedAcc.images} alt='imgage' className='w-full h-auto'  /> */}
+                        <div className='w-[50%] border-r'>
+                        {
+
+                            SelectedAcc && (
+                                <div className='flex items-center w-full'>
+
+                                    {SelectedAcc?.images && SelectedAcc.images.length > 1 && (
+                                        <div className='p-2 hover:opacity-75'>
+                                            <FaLessThan size={20} onClick={handleImgDecrement}  />
+                                        </div>
+                                    )}
+
+
+                                    <div className='m-2'>
+                                       <img src={SelectedAcc.images[index]} alt='pic' className='w-90 h-[400px] object-cover border'  /> 
+                                    </div>
+                                    
+                                    {SelectedAcc?.images && SelectedAcc.images.length > 1 && (
+                                        <div className='p-2 hover:opacity-75'>
+                                            <FaGreaterThan size={20} onClick={handleImgIncrement}  /> 
+                                        </div>
+                                    )}
+                                    
+                                </div>
+                              
+                            )
+                        }
+                            
                         </div>
 
-                        <div className='w-1/2'>
+                        <div className='w-[50%]'>
                         {
                             SelectedAcc && (
                                 <div>
@@ -230,28 +270,31 @@ export default function Accomadation() {
                                     </div>
 
                                     <table className='text-left'>
-                                        <tr>
-                                            <th className='p-2'>Description</th>
-                                            <td className='p-2'> {SelectedAcc.description}</td>
-                                        </tr>
+                                        <tbody>
+                                            <tr>
+                                                <th className='p-2'>Description</th>
+                                                <td className='p-2'> {SelectedAcc.description}</td>
+                                            </tr>
 
-                                        <tr>
-                                            <th className='p-2'>Address</th>
-                                            <td className='p-2'> {SelectedAcc.address}</td>
-                                        </tr>
-                                        <tr>
-                                            <th className='p-2'>Phone</th>
-                                            <td className='p-2'> {SelectedAcc.phone}</td>
-                                        </tr>
-                                        <tr>
-                                            <th className='p-2'>Email</th>
-                                            <td className='p-2'> {SelectedAcc.email}</td>
-                                        </tr>
-                                        <tr>
-                                            <th className='p-2'>Price</th>
-                                            <td className='p-2'> {SelectedAcc.unit} {SelectedAcc.price.toFixed(2)} per &nbsp;
-                                            {SelectedAcc.type} </td>
-                                        </tr>
+                                            <tr>
+                                                <th className='p-2'>Address</th>
+                                                <td className='p-2'> {SelectedAcc.address}</td>
+                                            </tr>
+                                            <tr>
+                                                <th className='p-2'>Phone</th>
+                                                <td className='p-2'> {SelectedAcc.phone}</td>
+                                            </tr>
+                                            <tr>
+                                                <th className='p-2'>Email</th>
+                                                <td className='p-2'> {SelectedAcc.email}</td>
+                                            </tr>
+                                            <tr>
+                                                <th className='p-2'>Price</th>
+                                                <td className='p-2'> {SelectedAcc.unit} {SelectedAcc.price.toFixed(2)} per &nbsp;
+                                                {SelectedAcc.type} </td>
+                                            </tr>
+                                        </tbody>
+                                        
                                     </table>
                                     {/* <div>
                                         <div><p className='text-[25px] font-semibold p-2'>{SelectedAcc.name}</p></div>

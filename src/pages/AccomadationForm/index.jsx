@@ -64,7 +64,7 @@ export default function AccomadationForm() {
         e.preventDefault();
 
         // Input validation (example: ensure required fields are filled)
-        if (!formData.name || !formData.address || !formData.price || !formData.type) {
+        if (!formData.name || !formData.address || !formData.price || !formData.type || !formData.images) {
             setError("Please fill all required fields.");
             return;
 
