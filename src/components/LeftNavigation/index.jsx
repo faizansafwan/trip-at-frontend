@@ -4,7 +4,7 @@ export default function LeftNav() {
 
 
   return (
-    <div className="w-[50%] lg:w-[19%] md:w-[25%] sm:w-[35%] z-[80] fixed top-50 left-0 flex justify-center bg-primary text-[20px] h-screen text-white">
+    <div className="w-[50%] lg:w-[19%] md:w-[25%] sm:w-[35%] z-[80] pt-3 fixed top-[60px] left-0 flex justify-center bg-primary text-[20px] h-screen text-white">
       <nav>
         <ul> 
           <ActiveLink href="/">Home <FaHome size={24} /></ActiveLink> 
