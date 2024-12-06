@@ -9,6 +9,7 @@ import { uploadImage } from "../../utils/uploadImage";
 import { useNavigate } from "react-router-dom";
 
 
+
 export default function AddPost() {
   const dispatch = useDispatch();
   const travelStatus = useSelector((state) => state.travel.status);
