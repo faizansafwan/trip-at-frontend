@@ -1,7 +1,7 @@
 {
   "name": "trip-at-frontend",
   "version": "0.1.0",
-  "proxy": "http://localhost:5000",
+  "proxy": "https://trip-at-backend.onrender.com",
   "private": true,
   "dependencies": {
     "@react-google-maps/api": "^2.20.3",
