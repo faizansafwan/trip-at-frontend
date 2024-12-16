@@ -266,7 +266,7 @@ export default function AddPost() {
 
             {/* Negative description */}
             <div className="w-full flex">
-              <label className="w-1/3 font-semibold mt-2">Negative</label>
+              <label className="w-1/3 font-semibold mt-2">Negative Description</label>
               <textarea
                 placeholder="Write about the negative aspects of the place..."
                 name="negativeDesc"

@@ -41,7 +41,7 @@ export default function Header() {
 
             <div className="relative flex flex-col items-center">
                 <div className="rounded-full cursor-pointer mr-5" onClick={toggleDropdown}>
-                    <img src={ user ? user.profilePicture : userImg} alt="Profile" className="rounded-full object-cover" width="40px" height="50px" />
+                    <img src={ user ? (user.profilePicture || userImg) : userImg } alt="Profile" className="rounded-full object-cover" width="40px" height="50px" />
                 </div>
 
                 {optionVisible && (
